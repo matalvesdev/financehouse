@@ -1,0 +1,13 @@
+[DEFAULT]
+user=ocid1.user.oc1..aaaaaaaaakyso4bg54xnmrtmkunveqoq4wahtmjltn3v2pesnu6fhnim2eoq
+fingerprint=69:75:cf:6a:73:b3:34:9b:bc:68:45:fd:18:f7:08:1f
+tenancy=ocid1.tenancy.oc1..aaaaaaaa3wdvrobn2k7rjh6wjyvv5xdnihdvqiylhsnq3acsjdeh4kpnutua
+region=sa-saopaulo-1
+key_file=C:/Users/Mateus Alves Bassane/.oci/oci_api_key.pem
+
+# INSTRUÇÕES:
+# 1. Copie o conteúdo acima (sem esta seção de instruções)
+# 2. Crie/edite o arquivo: C:\Users\Mateus Alves Bassane\.oci\config
+# 3. Cole o conteúdo
+# 4. Salve o arquivo
+# 5. Tente executar o terraform novamente
