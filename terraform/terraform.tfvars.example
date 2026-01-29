@@ -1,0 +1,46 @@
+# OCI Authentication
+# Obtenha esses valores no console da OCI
+tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaa..."
+user_ocid        = "ocid1.user.oc1..aaaaaaaa..."
+fingerprint      = "aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99"
+private_key_path = "~/.oci/oci_api_key.pem"
+region           = "sa-saopaulo-1"
+compartment_ocid = "ocid1.compartment.oc1..aaaaaaaa..."
+
+# Network Configuration
+vcn_cidr_block       = "10.0.0.0/16"
+public_subnet_cidr   = "10.0.1.0/24"
+private_subnet_cidr  = "10.0.2.0/24"
+
+# Compute Configuration
+# Opções Always Free:
+# - VM.Standard.E2.1.Micro (AMD x86, 1 OCPU, 1GB RAM) - 2 instâncias
+# - VM.Standard.A1.Flex (ARM, até 4 OCPUs, 24GB RAM) - compartilhado
+instance_shape          = "VM.Standard.E2.1.Micro"
+# Para ARM Always Free, use:
+# instance_shape          = "VM.Standard.A1.Flex"
+# instance_ocpus          = 4
+# instance_memory_in_gbs  = 24
+
+# SSH Key
+ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC..."
+
+# Database Configuration
+db_admin_password = "SenhaForte123!@#"
+db_name           = "gestaofinanceira"
+db_username       = "gestao_user"
+db_password       = "SenhaUsuario123!@#"
+
+# Application Configuration
+app_name       = "gestao-financeira"
+environment    = "production"
+jwt_secret     = "seu-jwt-secret-super-secreto-aqui"
+encryption_key = "sua-chave-de-criptografia-32-caracteres"
+
+# Tags
+tags = {
+  Project     = "GestaoFinanceira"
+  ManagedBy   = "Terraform"
+  Environment = "Production"
+  CostCenter  = "Engineering"
+}

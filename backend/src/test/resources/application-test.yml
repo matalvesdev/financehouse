@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  
+  flyway:
+    enabled: false
+
+# Test-specific configuration
+app:
+  jwt:
+    secret: bXlTZWNyZXRLZXkxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MA==
+    access-token-validity-seconds: 900
+    refresh-token-validity-seconds: 604800
+    issuer: gestao-financeira-test
+  
+  encryption:
+    # Base64 encoded AES-256 key for tests (32 bytes = 256 bits)
+    key: AQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyA=
+
+logging:
+  level:
+    com.gestaofinanceira: DEBUG
+    org.springframework.security: INFO

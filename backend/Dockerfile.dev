@@ -1,0 +1,25 @@
+FROM openjdk:21-jdk-slim
+
+# Install Maven
+RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy pom.xml and download dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Copy source code
+COPY src ./src
+COPY mvnw .
+COPY .mvn ./.mvn
+
+# Make mvnw executable
+RUN chmod +x ./mvnw
+
+# Expose port for Spring Boot and debug
+EXPOSE 8080 5005
+
+# Default command (can be overridden in docker-compose)
+CMD ["./mvnw", "spring-boot:run"]

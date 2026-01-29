@@ -1,0 +1,45 @@
+# OCI Authentication
+tenancy_ocid     = "ocid1.tenancy.oc1..aaaaaaaa..."
+user_ocid        = "ocid1.user.oc1..aaaaaaaa..."
+fingerprint      = "aa:bb:cc:dd:ee:ff:00:11:22:33:44:55:66:77:88:99"
+private_key_path = "~/.oci/oci_api_key.pem"
+region           = "sa-saopaulo-1"
+compartment_ocid = "ocid1.compartment.oc1..aaaaaaaa..."
+
+# Environment
+environment = "production"
+
+# Network Configuration
+vcn_cidr_block       = "10.1.0.0/16"
+public_subnet_cidr   = "10.1.1.0/24"
+private_subnet_cidr  = "10.1.2.0/24"
+
+# Compute Configuration (Always Free)
+instance_shape          = "VM.Standard.E2.1.Micro"
+# Para melhor performance em produção, use ARM:
+# instance_shape          = "VM.Standard.A1.Flex"
+# instance_ocpus          = 4
+# instance_memory_in_gbs  = 24
+
+# SSH Key
+ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC..."
+
+# Database Configuration
+db_admin_password = "ProdStrongPassword123!@#$%"
+db_name           = "gestaofinanceira"
+db_username       = "gestao_prod"
+db_password       = "ProdUserStrongPass123!@#$%"
+
+# Application Configuration
+app_name       = "gestao-financeira"
+jwt_secret     = "CHANGE-THIS-TO-STRONG-RANDOM-SECRET-32-CHARS"
+encryption_key = "CHANGE-THIS-TO-STRONG-RANDOM-KEY-32-CHARS"
+
+# Tags
+tags = {
+  Project     = "GestaoFinanceira"
+  ManagedBy   = "Terraform"
+  Environment = "Production"
+  CostCenter  = "Engineering"
+  Backup      = "Required"
+}

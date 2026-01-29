@@ -1,0 +1,80 @@
+spring:
+  application:
+    name: gestao-financeira-backend
+  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/gestao_financeira
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  
+  security:
+    user:
+      name: admin
+      password: admin
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# JWT Configuration
+app:
+  jwt:
+    # Base64 encoded secret key (in production, use environment variable)
+    secret: ${JWT_SECRET:bXlTZWNyZXRLZXkxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MA==}
+    access-token-validity-seconds: ${JWT_ACCESS_TOKEN_VALIDITY:900} # 15 minutes
+    refresh-token-validity-seconds: ${JWT_REFRESH_TOKEN_VALIDITY:604800} # 7 days
+    issuer: ${JWT_ISSUER:gestao-financeira}
+  
+  # Encryption Configuration
+  encryption:
+    # Base64 encoded AES-256 key (32 bytes = 256 bits)
+    # In production, use environment variable and rotate regularly
+    key: ${ENCRYPTION_KEY:YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY3OA==}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+
+logging:
+  level:
+    com.gestaofinanceira: DEBUG
+    org.springframework.security: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: logs/gestao-financeira.log
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      market-data:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        permitted-number-of-calls-in-half-open-state: 3
+        wait-duration-in-open-state: 30s
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 50
+        slow-call-duration-threshold: 2s

@@ -1,0 +1,141 @@
+#cloud-config
+
+# Configuração inicial da instância para deploy da aplicação
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - docker
+  - docker-compose
+  - git
+  - curl
+  - wget
+  - unzip
+  - oracle-instantclient-release-el8
+  - oracle-instantclient-basic
+  - oracle-instantclient-sqlplus
+
+runcmd:
+  # Configurar Docker
+  - systemctl enable docker
+  - systemctl start docker
+  - usermod -aG docker opc
+  
+  # Criar diretórios da aplicação
+  - mkdir -p /opt/${app_name}
+  - mkdir -p /opt/${app_name}/wallet
+  - mkdir -p /opt/${app_name}/logs
+  - mkdir -p /opt/${app_name}/data
+  
+  # Configurar variáveis de ambiente
+  - |
+    cat > /opt/${app_name}/.env <<EOF
+    # Database Configuration
+    DB_HOST=${db_host}
+    DB_NAME=${db_name}
+    DB_USERNAME=${db_username}
+    DB_PASSWORD=${db_password}
+    
+    # Application Configuration
+    JWT_SECRET=${jwt_secret}
+    ENCRYPTION_KEY=${encryption_key}
+    SPRING_PROFILES_ACTIVE=production
+    
+    # Server Configuration
+    SERVER_PORT=8080
+    
+    # Logging
+    LOGGING_LEVEL_ROOT=INFO
+    LOGGING_LEVEL_COM_GESTAOFINANCEIRA=INFO
+    EOF
+  
+  # Configurar permissões
+  - chown -R opc:opc /opt/${app_name}
+  - chmod 600 /opt/${app_name}/.env
+  
+  # Configurar firewall
+  - firewall-cmd --permanent --add-port=80/tcp
+  - firewall-cmd --permanent --add-port=443/tcp
+  - firewall-cmd --permanent --add-port=8080/tcp
+  - firewall-cmd --reload
+  
+  # Instalar Docker Compose (versão mais recente)
+  - curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  - chmod +x /usr/local/bin/docker-compose
+  
+  # Criar script de deploy
+  - |
+    cat > /opt/${app_name}/deploy.sh <<'DEPLOY_SCRIPT'
+    #!/bin/bash
+    set -e
+    
+    APP_DIR="/opt/${app_name}"
+    REPO_URL="https://github.com/seu-usuario/gestao-financeira.git"
+    
+    cd $APP_DIR
+    
+    # Clone ou atualiza o repositório
+    if [ -d "$APP_DIR/app" ]; then
+      cd $APP_DIR/app
+      git pull
+    else
+      git clone $REPO_URL $APP_DIR/app
+      cd $APP_DIR/app
+    fi
+    
+    # Copia variáveis de ambiente
+    cp $APP_DIR/.env $APP_DIR/app/.env
+    
+    # Build e deploy com Docker Compose
+    docker-compose -f docker-compose.prod.yml down
+    docker-compose -f docker-compose.prod.yml build
+    docker-compose -f docker-compose.prod.yml up -d
+    
+    echo "Deploy concluído com sucesso!"
+    DEPLOY_SCRIPT
+  
+  - chmod +x /opt/${app_name}/deploy.sh
+  
+  # Configurar systemd service para auto-start
+  - |
+    cat > /etc/systemd/system/${app_name}.service <<EOF
+    [Unit]
+    Description=${app_name} Application
+    After=docker.service
+    Requires=docker.service
+    
+    [Service]
+    Type=oneshot
+    RemainAfterExit=yes
+    WorkingDirectory=/opt/${app_name}/app
+    ExecStart=/usr/local/bin/docker-compose -f docker-compose.prod.yml up -d
+    ExecStop=/usr/local/bin/docker-compose -f docker-compose.prod.yml down
+    User=opc
+    Group=opc
+    
+    [Install]
+    WantedBy=multi-user.target
+    EOF
+  
+  - systemctl daemon-reload
+  - systemctl enable ${app_name}.service
+
+write_files:
+  - path: /etc/motd
+    content: |
+      ========================================
+      ${app_name} - Production Server
+      ========================================
+      
+      Application Directory: /opt/${app_name}
+      Logs: /opt/${app_name}/logs
+      
+      Useful commands:
+      - Deploy: /opt/${app_name}/deploy.sh
+      - View logs: docker-compose -f /opt/${app_name}/app/docker-compose.prod.yml logs -f
+      - Restart: systemctl restart ${app_name}
+      
+      ========================================
+
+final_message: "Sistema inicializado com sucesso! A aplicação está pronta para deploy."
