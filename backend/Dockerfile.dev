@@ -1,25 +1,20 @@
-FROM openjdk:21-jdk-slim
+FROM eclipse-temurin:21-jdk-alpine
 
-# Install Maven
-RUN apt-get update && apt-get install -y maven && rm -rf /var/lib/apt/lists/*
+# Install Maven and bash
+RUN apk add --no-cache maven bash
 
 # Set working directory
 WORKDIR /app
 
 # Copy pom.xml and download dependencies
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
+RUN mvn dependency:go-offline -B || true
 
 # Copy source code
 COPY src ./src
-COPY mvnw .
-COPY .mvn ./.mvn
-
-# Make mvnw executable
-RUN chmod +x ./mvnw
 
 # Expose port for Spring Boot and debug
 EXPOSE 8080 5005
 
-# Default command (can be overridden in docker-compose)
-CMD ["./mvnw", "spring-boot:run"]
+# Default command - use Maven directly
+CMD ["mvn", "spring-boot:run", "-Dspring-boot.run.jvmArguments=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"]

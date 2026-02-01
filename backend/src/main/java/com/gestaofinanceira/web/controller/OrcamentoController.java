@@ -32,7 +32,7 @@ import java.util.Objects;
  * Requirements: 5.1, 5.2
  */
 @RestController
-@RequestMapping("/api/orcamentos")
+@RequestMapping("/orcamentos")
 @Validated
 public class OrcamentoController {
     

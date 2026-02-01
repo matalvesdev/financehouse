@@ -21,12 +21,16 @@ spring:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:l5eQkTs9ugLCsQS5AhFX3+qePOyujluE/fnJyowkIrc=}
+    access-token-validity-seconds: 900 # 15 minutes
+    refresh-token-validity-seconds: 604800 # 7 days
+    issuer: gestao-financeira
   
-  security:
-    jwt:
-      secret: ${JWT_SECRET:mySecretKey123456789012345678901234567890}
-      expiration: 86400000 # 24 hours
-      refresh-expiration: 604800000 # 7 days
+  encryption:
+    key: ${ENCRYPTION_KEY:w3EPhm5P9f9GjQz9LXPMxWpoGUNiiKtSgZo9FVuWYyA=}
 
 server:
   port: 8080

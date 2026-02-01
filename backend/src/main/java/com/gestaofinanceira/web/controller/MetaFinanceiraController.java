@@ -34,7 +34,7 @@ import java.util.Objects;
  * Requirements: 6.1, 6.2
  */
 @RestController
-@RequestMapping("/api/metas")
+@RequestMapping("/metas")
 @Validated
 public class MetaFinanceiraController {
     

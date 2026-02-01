@@ -88,8 +88,8 @@ public class AutenticarUsuarioUseCase {
         // 6. Criar resposta de usuário
         UsuarioResponse usuarioResponse = new UsuarioResponse(
             usuario.getId().valor().toString(),
-            usuario.getEmail().valor(),
             usuario.getNome().valor(),
+            usuario.getEmail().valor(),
             usuario.getCriadoEm(),
             usuario.isAtivo(),
             usuario.isDadosIniciaisCarregados()

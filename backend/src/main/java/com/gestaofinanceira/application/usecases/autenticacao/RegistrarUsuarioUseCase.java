@@ -85,8 +85,8 @@ public class RegistrarUsuarioUseCase {
         // 8. Retornar resposta
         return new UsuarioResponse(
             usuarioSalvo.getId().valor().toString(),
-            usuarioSalvo.getEmail().valor(),
             usuarioSalvo.getNome().valor(),
+            usuarioSalvo.getEmail().valor(),
             usuarioSalvo.getCriadoEm(),
             usuarioSalvo.isAtivo(),
             usuarioSalvo.isDadosIniciaisCarregados()

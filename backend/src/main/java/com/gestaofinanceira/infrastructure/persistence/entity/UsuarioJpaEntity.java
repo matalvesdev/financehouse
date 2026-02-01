@@ -20,7 +20,6 @@ public class UsuarioJpaEntity {
     @Column(name = "id", columnDefinition = "UUID")
     private UUID id;
     
-    @Convert(converter = EncryptedStringConverter.class)
     @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
     

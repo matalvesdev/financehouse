@@ -32,7 +32,7 @@ import java.util.Objects;
  * Requirements: 1.1, 1.2, 1.3, 1.4
  */
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/auth")
 @Validated
 public class AuthController {
     

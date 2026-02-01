@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
  * Requirements: 3.1, 3.2, 3.3, 3.5
  */
 @RestController
-@RequestMapping("/api/transacoes")
+@RequestMapping("/transacoes")
 @Validated
 public class TransacaoController {
     
